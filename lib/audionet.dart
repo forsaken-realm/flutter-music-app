@@ -1,4 +1,3 @@
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 
@@ -9,26 +8,21 @@ class AudiNet extends StatefulWidget {
 
 class _AudiNetState extends State<AudiNet> {
   String url;
-  TextEditingController urltext = TextEditingController();
-  void onsubmitted() {
-    String urlenteredtext = urltext.text;
-    if (urlenteredtext != null) {
-      netaudio(urlenteredtext);
+  final urlText = TextEditingController();
+  AudioPlayer audioPlayer = AudioPlayer();
 
-      urltext.clear();
-    }
+  void netAudio(String url) {
+    try {
+      audioPlayer.play(url);
+    } catch (t) {}
   }
 
-  final assetsAudioPlayer = AssetsAudioPlayer();
-
-  netaudio(String url) async {
-    try {
-      await assetsAudioPlayer.open(
-        Audio.network(
-            "https://www2.cs.uic.edu/~i101/SoundFiles/CantinaBand60.wav"),
-      );
-    } catch (t) {
-      //mp3 unreachable
+  void onSubmitted() {
+    String urlEnteredText = urlText.text;
+    print(urlText.text);
+    if (urlText.text != null) {
+      netAudio(urlEnteredText);
+      urlText.clear();
     }
   }
 
@@ -52,8 +46,8 @@ class _AudiNetState extends State<AudiNet> {
                   padding: EdgeInsets.all(20),
                   width: MediaQuery.of(context).size.width * 0.83,
                   child: TextField(
-                    onSubmitted: (_) => onsubmitted(),
-                    controller: urltext,
+                    onSubmitted: (_) => onSubmitted(),
+                    controller: urlText,
                     decoration: InputDecoration(
                       labelText: "Enter the url",
                     ),
@@ -63,7 +57,7 @@ class _AudiNetState extends State<AudiNet> {
                   maxRadius: 24,
                   child: IconButton(
                     icon: Icon(Icons.search),
-                    onPressed: onsubmitted,
+                    onPressed: onSubmitted,
                   ),
                 ),
               ],
@@ -82,11 +76,11 @@ class _AudiNetState extends State<AudiNet> {
                       ),
                       iconSize: 30,
                       onPressed: () {
-                        assetsAudioPlayer.playOrPause();
+                        audioPlayer.pause();
                       }),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
