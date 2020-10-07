@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:flutter/material.dart';
 
 class MyMusicClass extends StatefulWidget {
   @override
@@ -11,37 +11,14 @@ class MyMusicClass extends StatefulWidget {
 class _MyMusicClassState extends State<MyMusicClass> {
   final assetsAudioPlayer = AssetsAudioPlayer();
   bool isplaying = false;
-  pauseAudio() async {
-    await assetsAudioPlayer.pause();
-  }
-
-  stopAudio() async {
-    await assetsAudioPlayer.stop();
-  }
-
-  resumeAudio() async {
-    await assetsAudioPlayer.play();
-  }
-
-  nextAudio() async {
-    await assetsAudioPlayer.next();
-  }
-
-  prevAudio() async {
-    await assetsAudioPlayer.previous();
-  }
-
-  playAudio(url) async {
-    assetsAudioPlayer.open(
-      Audio.file(url),
-    );
-  }
-
-  playAudioFromLocalStorage(path) async {
-    await assetsAudioPlayer.open(path);
-  }
 
   Duration abc;
+
+  void deactivate() {
+    super.deactivate();
+    assetsAudioPlayer.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

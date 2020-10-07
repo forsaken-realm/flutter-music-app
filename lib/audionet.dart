@@ -11,16 +11,15 @@ class _AudiNetState extends State<AudiNet> {
   final urlText = TextEditingController();
   AudioPlayer audioPlayer = AudioPlayer();
 
-  void netAudio(String url) {
+  void netAudio(String url) async {
     try {
-      audioPlayer.play(url);
+      await audioPlayer.play(url);
     } catch (t) {}
   }
 
   void onSubmitted() {
     String urlEnteredText = urlText.text;
-    print(urlText.text);
-    if (urlText.text != null) {
+    if (urlEnteredText != null) {
       netAudio(urlEnteredText);
       urlText.clear();
     }
