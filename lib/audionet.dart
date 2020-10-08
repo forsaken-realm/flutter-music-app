@@ -9,22 +9,23 @@ class AudiNet extends StatefulWidget {
 class _AudiNetState extends State<AudiNet> {
   final urlText = TextEditingController();
   AudioPlayer _player = AudioPlayer();
-  Duration postion = Duration();
+  Duration position = Duration();
   Duration duration = Duration();
-
+  bool isPlaying = false;
   void netAudio(String url) async {
     try {
       await _player.play(url, isLocal: true);
       _player.onAudioPositionChanged.listen((Duration time) {
         setState(() {
-          postion = time;
+          position = time;
+          isPlaying = true;
         });
       });
-      _player.onPlayerStateChanged.listen((event) {
       setState(() {
-        duration = _player.duration;
+        _player.onPlayerStateChanged.listen((event) {
+          duration = _player.duration;
+        });
       });
-      })
     } catch (t) {
       print(t);
     }
@@ -32,7 +33,7 @@ class _AudiNetState extends State<AudiNet> {
 
   void onSubmitted() {
     String urlEnteredText = urlText.text;
-    if (urlEnteredText != null) {
+    if (urlEnteredText != null && !isPlaying) {
       netAudio(urlEnteredText);
       urlText.clear();
     }
@@ -80,7 +81,7 @@ class _AudiNetState extends State<AudiNet> {
             slider(),
             Center(
               child: Text(
-                "${postion.inSeconds.toDouble()}/${duration.inSeconds.toDouble()}",
+                "${position.inSeconds.toDouble()}/${duration.inSeconds.toDouble()}",
                 style: TextStyle(fontSize: 25),
               ),
             ),
@@ -88,11 +89,14 @@ class _AudiNetState extends State<AudiNet> {
               maxRadius: 30,
               child: IconButton(
                   icon: Icon(
-                    Icons.play_arrow,
+                    isPlaying ? Icons.pause : Icons.play_arrow,
                   ),
                   iconSize: 30,
                   onPressed: () async {
                     await _player.pause();
+                    setState(() {
+                      isPlaying = false;
+                    });
                   }),
             ),
           ],
@@ -104,7 +108,7 @@ class _AudiNetState extends State<AudiNet> {
   Widget slider() {
     return Slider.adaptive(
       min: 0.0,
-      value: postion.inSeconds.toDouble(),
+      value: position.inSeconds.toDouble(),
       max: duration.inSeconds.toDouble(),
       onChanged: (duration) {
         _player.seek(duration.toDouble());

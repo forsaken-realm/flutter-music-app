@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicapp/audionet.dart';
 import 'package:musicapp/music.dart';
+import 'package:musicapp/video.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -15,7 +16,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> bodyItems = [
     MyMusicClass(),
     AudiNet(),
-    Text("data"),
+    AssetAudio(),
   ];
   int _currentIndex = 0;
 
