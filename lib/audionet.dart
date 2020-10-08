@@ -1,7 +1,5 @@
-import 'package:audio_session/audio_session.dart';
+import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:just_audio/just_audio.dart';
 
 class AudiNet extends StatefulWidget {
   @override
@@ -10,29 +8,23 @@ class AudiNet extends StatefulWidget {
 
 class _AudiNetState extends State<AudiNet> {
   final urlText = TextEditingController();
-  AudioPlayer _player;
-  ConcatenatingAudioSource concatenatingAudioSource;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _player = AudioPlayer();
-    concatenatingAudioSource = ConcatenatingAudioSource();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.black,
-    ));
-    _init();
-  }
-
-  _init() async {
-    final session = await AudioSession.instance;
-    await session.configure(AudioSessionConfiguration.speech());
-  }
+  AudioPlayer _player = AudioPlayer();
+  Duration postion = Duration();
+  Duration duration = Duration();
 
   void netAudio(String url) async {
     try {
-      await _player.setUrl(url);
+      await _player.play(url, isLocal: true);
+      _player.onAudioPositionChanged.listen((Duration time) {
+        setState(() {
+          postion = time;
+        });
+      });
+      _player.onPlayerStateChanged.listen((event) {
+      setState(() {
+        duration = _player.duration;
+      });
+      })
     } catch (t) {
       print(t);
     }
@@ -85,25 +77,38 @@ class _AudiNetState extends State<AudiNet> {
             SizedBox(
               height: 30,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  maxRadius: 30,
-                  child: IconButton(
-                      icon: Icon(
-                        Icons.play_arrow,
-                      ),
-                      iconSize: 30,
-                      onPressed: () async {
-                        await _player.pause();
-                      }),
-                ),
-              ],
+            slider(),
+            Center(
+              child: Text(
+                "${postion.inSeconds.toDouble()}/${duration.inSeconds.toDouble()}",
+                style: TextStyle(fontSize: 25),
+              ),
+            ),
+            CircleAvatar(
+              maxRadius: 30,
+              child: IconButton(
+                  icon: Icon(
+                    Icons.play_arrow,
+                  ),
+                  iconSize: 30,
+                  onPressed: () async {
+                    await _player.pause();
+                  }),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget slider() {
+    return Slider.adaptive(
+      min: 0.0,
+      value: postion.inSeconds.toDouble(),
+      max: duration.inSeconds.toDouble(),
+      onChanged: (duration) {
+        _player.seek(duration.toDouble());
+      },
     );
   }
 }

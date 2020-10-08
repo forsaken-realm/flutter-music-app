@@ -22,13 +22,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.5.0-nullsafety.1"
-  audio_session:
-    dependency: transitive
+  audioplayer:
+    dependency: "direct main"
     description:
-      name: audio_session
+      name: audioplayer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.8"
+    version: "0.8.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -142,20 +142,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
-  just_audio:
-    dependency: "direct main"
-    description:
-      name: just_audio
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.5.2"
-  just_audio_platform_interface:
-    dependency: transitive
-    description:
-      name: just_audio_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   matcher:
     dependency: transitive
     description:
