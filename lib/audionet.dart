@@ -1,5 +1,7 @@
-import 'package:audioplayer/audioplayer.dart';
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
 
 class AudiNet extends StatefulWidget {
   @override
@@ -7,14 +9,33 @@ class AudiNet extends StatefulWidget {
 }
 
 class _AudiNetState extends State<AudiNet> {
-  String url;
   final urlText = TextEditingController();
-  AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer _player;
+  ConcatenatingAudioSource concatenatingAudioSource;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _player = AudioPlayer();
+    concatenatingAudioSource = ConcatenatingAudioSource();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.black,
+    ));
+    _init();
+  }
+
+  _init() async {
+    final session = await AudioSession.instance;
+    await session.configure(AudioSessionConfiguration.speech());
+  }
 
   void netAudio(String url) async {
     try {
-      await audioPlayer.play(url);
-    } catch (t) {}
+      await _player.setUrl(url);
+    } catch (t) {
+      print(t);
+    }
   }
 
   void onSubmitted() {
@@ -74,8 +95,8 @@ class _AudiNetState extends State<AudiNet> {
                         Icons.play_arrow,
                       ),
                       iconSize: 30,
-                      onPressed: () {
-                        audioPlayer.pause();
+                      onPressed: () async {
+                        await _player.pause();
                       }),
                 ),
               ],
