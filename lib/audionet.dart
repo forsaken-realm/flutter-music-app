@@ -31,6 +31,11 @@ class _AudiNetState extends State<AudiNet> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void onSubmitted() {
     String urlEnteredText = urlText.text;
     if (urlEnteredText != null && !isPlaying) {

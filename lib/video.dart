@@ -25,6 +25,7 @@ class _AssetAudioState extends State<AssetAudio> {
           mute: false,
         ),
       );
+      textControl.clear();
       Navigator.push(
         context,
         MaterialPageRoute(
