@@ -40,56 +40,58 @@ class _AssetAudioState extends State<AssetAudio> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text("Asset video player"),
-        SizedBox(
-          height: 5,
-        ),
-        Container(
-          alignment: Alignment.center,
-          child: NativeVideoView(
-            keepAspectRatio: true,
-            showMediaController: true,
-            onCreated: (controller) {
-              controller.setVideoSource(
-                'assets/video/new.mp4',
-                sourceType: VideoSourceType.asset,
-              );
-            },
-            onPrepared: (controller, info) {
-              controller.play();
-            },
-            onError: (controller, what, extra, message) {
-              print('Player Error ($what | $extra | $message)');
-            },
-            onCompletion: (controller) {
-              print('Video completed');
-            },
-            onProgress: (progress, duration) {
-              print('$progress | $duration');
-            },
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Asset video player"),
+          SizedBox(
+            height: 5,
           ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        TextField(
-          controller: textControl,
-          decoration: InputDecoration(labelText: 'Enter online video url'),
-          onSubmitted: (_) => onSubmitted(),
-        ),
-        RaisedButton(
-          color: Colors.black,
-          splashColor: Colors.white,
-          onPressed: onSubmitted,
-          child: Text(
-            'Play video online',
-            style: TextStyle(color: Colors.white),
+          Container(
+            alignment: Alignment.center,
+            child: NativeVideoView(
+              keepAspectRatio: true,
+              showMediaController: true,
+              onCreated: (controller) {
+                controller.setVideoSource(
+                  'assets/video/new.mp4',
+                  sourceType: VideoSourceType.asset,
+                );
+              },
+              onPrepared: (controller, info) {
+                controller.play();
+              },
+              onError: (controller, what, extra, message) {
+                print('Player Error ($what | $extra | $message)');
+              },
+              onCompletion: (controller) {
+                print('Video completed');
+              },
+              onProgress: (progress, duration) {
+                print('$progress | $duration');
+              },
+            ),
           ),
-        )
-      ],
+          SizedBox(
+            height: 20,
+          ),
+          TextField(
+            controller: textControl,
+            decoration: InputDecoration(labelText: 'Enter online video url'),
+            onSubmitted: (_) => onSubmitted(),
+          ),
+          RaisedButton(
+            color: Colors.black,
+            splashColor: Colors.white,
+            onPressed: onSubmitted,
+            child: Text(
+              'Play video online',
+              style: TextStyle(color: Colors.white),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

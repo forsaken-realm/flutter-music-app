@@ -23,7 +23,9 @@ class _AudiNetState extends State<AudiNet> {
       });
       setState(() {
         _player.onPlayerStateChanged.listen((event) {
-          duration = _player.duration;
+          setState(() {
+            duration = _player.duration;
+          });
         });
       });
     } catch (t) {
@@ -47,64 +49,66 @@ class _AudiNetState extends State<AudiNet> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height * 0.4,
-        decoration: BoxDecoration(
-          color: Colors.black12,
-          borderRadius: BorderRadius.circular(
-            20,
+      child: SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height * 0.5,
+          decoration: BoxDecoration(
+            color: Colors.black12,
+            borderRadius: BorderRadius.circular(
+              20,
+            ),
           ),
-        ),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(20),
-                  width: MediaQuery.of(context).size.width * 0.83,
-                  child: TextField(
-                    onSubmitted: (_) => onSubmitted(),
-                    controller: urlText,
-                    decoration: InputDecoration(
-                      labelText: "Enter the url",
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    width: MediaQuery.of(context).size.width * 0.83,
+                    child: TextField(
+                      onSubmitted: (_) => onSubmitted(),
+                      controller: urlText,
+                      decoration: InputDecoration(
+                        labelText: "Enter the url",
+                      ),
                     ),
                   ),
-                ),
-                CircleAvatar(
-                  maxRadius: 24,
-                  child: IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: onSubmitted,
+                  CircleAvatar(
+                    maxRadius: 24,
+                    child: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: onSubmitted,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            slider(),
-            Center(
-              child: Text(
-                "${position.inSeconds.toDouble()}/${duration.inSeconds.toDouble()}",
-                style: TextStyle(fontSize: 25),
+                ],
               ),
-            ),
-            CircleAvatar(
-              maxRadius: 30,
-              child: IconButton(
-                  icon: Icon(
-                    isPlaying ? Icons.pause : Icons.play_arrow,
-                  ),
-                  iconSize: 30,
-                  onPressed: () async {
-                    await _player.pause();
-                    setState(() {
-                      isPlaying = false;
-                    });
-                  }),
-            ),
-          ],
+              SizedBox(
+                height: 30,
+              ),
+              slider(),
+              Center(
+                child: Text(
+                  "${position.inSeconds.toDouble()}/${duration.inSeconds.toDouble()}",
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
+              CircleAvatar(
+                maxRadius: 30,
+                child: IconButton(
+                    icon: Icon(
+                      isPlaying ? Icons.pause : Icons.play_arrow,
+                    ),
+                    iconSize: 30,
+                    onPressed: () async {
+                      await _player.pause();
+                      setState(() {
+                        isPlaying = false;
+                      });
+                    }),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -113,8 +117,8 @@ class _AudiNetState extends State<AudiNet> {
   Widget slider() {
     return Slider.adaptive(
       min: 0.0,
-      value: position.inSeconds.toDouble(),
-      max: duration.inSeconds.toDouble(),
+      value: duration.inSeconds.toDouble(),
+      max: position.inSeconds.toDouble(),
       onChanged: (duration) {
         _player.seek(duration.toDouble());
       },
